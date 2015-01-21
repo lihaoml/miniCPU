@@ -1,0 +1,65 @@
+%----------------------------------------------------------------------------------------
+%    PAGE ADJUSTMENTS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt,a4paper,hidelinks]{article}            % Article 12pt font for a4 paper while hiding links
+\usepackage[margin=1in]{geometry}                          % Required to adjust margins
+\input{styleAndCommands}
+\title{\vspace{-3ex}Assignment 1\vspace{-7ex}}
+\date{}
+\begin{document}
+\maketitle
+\subsection*{Assignment 1a. Eight queens puzzle}
+Write a program to place 8 chess queens on an 8x8 chessboard 
+such that none of the queens is able to threaten each other.
+That is, none of the queens share the same row, column or diagonal.
+The solution is not unique, but your program is required to find only one valid solution.
+
+The detailed description of the problem and possible algorithm to solve the problem can be found on wikipedia \url{http://en.wikipedia.org/wiki/Eight_queens_puzzle}.
+
+Below is a recursive algorithm to tackle the problem.
+It places the queens column by column incrementally. 
+At placing column $i$, it picks a safe row against the previous placed columns ($1$ to $i-1$), 
+and proceed to place the remaining column. A solution is found if safe rows can be found all the way till the last column.
+Otherwise, the algorithm rolls back and picks the next safe row at column i.
+Below is the pseudo code of this algorithm.
+
+\begin{algorithm}
+	\caption{succeed = PlaceQ (prevQ, $i$)}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \Input{prevQ: the placement of queens before column $i$}
+    \Output{succeed: whether it is possible to place the queens}
+	\If{ $ i > 8 $} {
+		solution found, print it out and return
+	}
+    \Else{ 
+    	succeed = false; \\
+    	\For{$r \gets 1$ \textbf{to} $8$} {
+		  \If{ placing a queen at $(r, i)$ does not threaten prevQ} {
+			\If {place(prevQ + $(r, i)$, $i+1$) == true} {
+		        succeed = true; \\
+		        return;
+		        }		  
+		  }
+		}   
+    }
+\end{algorithm}
+
+You can follow this algorithm or design your own algorithm.
+But you should not brute force the problem.
+The output of your program should be in this format:
+\begin{verbatim}
+   1   0   0   0   0   0   0   0
+   0   0   1   0   0   0   0   0
+   0   0   0   0   0   1   0   0
+   0   0   0   0   0   0   0   1
+   0   0   0   0   0   0   1   0
+   0   0   0   1   0   0   0   0
+   0   1   0   0   0   0   0   0
+   0   0   0   0   1   0   0   0
+\end{verbatim}
+where $1$ represents the positions of the queens.
+
+\subsection*{Assignment 1b. Estimation of $\pi$}
+\end{document}
