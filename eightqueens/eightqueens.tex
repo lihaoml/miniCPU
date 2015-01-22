@@ -1,8 +1,9 @@
+
 %----------------------------------------------------------------------------------------
 %    PAGE ADJUSTMENTS
 %----------------------------------------------------------------------------------------
 
-\documentclass[12pt,a4paper,hidelinks]{article}            % Article 12pt font for a4 paper while hiding links
+\documentclass[12pt,a4paper,hidelinks,fleqn]{article}            % Article 12pt font for a4 paper while hiding links
 \usepackage[margin=1in]{geometry}                          % Required to adjust margins
 \input{styleAndCommands}
 \title{\vspace{-3ex}Assignment 1\vspace{-7ex}}
@@ -61,5 +62,17 @@ The output of your program should be in this format:
 \end{verbatim}
 where $1$ represents the positions of the queens.
 
-\subsection*{Assignment 1b. Estimation of $\pi$}
+\subsection*{Assignment 1b. Approximation of $\pi$}
+There are many infinite series for approximating $\pi$.
+Implement three functions 
+\begin{itemize}
+\item myPi1($nTerm$): $\displaystyle \pi = 4 \sum_{k=0}^{nTerm} (-1)^{k}\frac{1}{2k+1}$
+\item myPi2($nTerm$): $\displaystyle \pi = 3 + 4 \times \sum_{k=1}^{nTerm}(-1)^{k-1}\frac{1}{2k \times (2k+1) \times (2k+2)}$
+\item myPi3($nTerm$): 
+\begin{align*}
+\pi = 4(4\arctan \frac{1}{5} - \arctan \frac{1}{239}), ~~~\text{where} 
+~~~\arctan x = \sum_{k=0}^{nTerm} \frac{(-1)^k} {2k+1} x^{2k+1}
+\end{align*}
+\end{itemize}
+and plot their convergence chart with X-axis the number of terms used $nTerm$, and Y-axis the error.
 \end{document}
