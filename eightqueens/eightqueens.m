@@ -21,17 +21,17 @@ function eightqueens
       solutionMat(i, prevQ(i)) = 1;
     endfor
     solutionMat
-    return
-  endif
-  for r = 1:8  # check each (r, col)
-    if ( isSafe (r, col, prevQ) ) # go to next column
-      prevQ(col) = r;
-      if ( place(prevQ, col+1) )
-        succeed = true;
-        return;
+  else
+    for r = 1:8  # check each (r, col)
+      if ( isSafe (r, col, prevQ) ) # go to next column
+        prevQ(col) = r;
+        if ( place(prevQ, col+1) )
+          succeed = true;
+          return;
+        endif
       endif
-    endif
-  endfor
+    endfor
+  end
   endfunction
 
   if (place([], 1))
