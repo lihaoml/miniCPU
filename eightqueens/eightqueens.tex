@@ -21,7 +21,8 @@ The detailed description of the problem and possible algorithm to solve the prob
 Below is a recursive algorithm to tackle the problem.
 It places the queens column by column incrementally. 
 At placing column $i$, it picks a safe row against the previous placed columns ($1$ to $i-1$), 
-and proceed to place the remaining column. A solution is found if safe rows can be found all the way till the last column.
+and proceed to place the remaining columns. 
+A solution is found if safe rows can be found all the way till the last column.
 Otherwise, the algorithm rolls back and picks the next safe row at column i.
 Below is the pseudo code of this algorithm.
 
@@ -29,10 +30,10 @@ Below is the pseudo code of this algorithm.
 	\caption{succeed = PlaceQ (prevQ, $i$)}
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
-    \Input{prevQ: the placement of queens before column $i$}
+    \Input{prevQ: one dimensional array of length $i-1$, indicating the queens before column i are placed at (prevQ(k), k) for k $\in [1, i-1]$}
     \Output{succeed: whether it is possible to place the queens}
 	\If{ $ i > 8 $} {
-		solution found, print it out and return
+		solution found, print it out
 	}
     \Else{ 
     	succeed = false; \\
@@ -40,7 +41,7 @@ Below is the pseudo code of this algorithm.
 		  \If{ placing a queen at $(r, i)$ does not threaten prevQ} {
 			\If {place(prevQ + $(r, i)$, $i+1$) == true} {
 		        succeed = true; \\
-		        return;
+		        break; \# we are interested only in 1 solution so stop if we find one.
 		        }		  
 		  }
 		}   
