@@ -1,12 +1,8 @@
 
-%----------------------------------------------------------------------------------------
-%    PAGE ADJUSTMENTS
-%----------------------------------------------------------------------------------------
-
 \documentclass[12pt,a4paper,hidelinks,fleqn]{article}            % Article 12pt font for a4 paper while hiding links
 \usepackage[margin=1in]{geometry}                          % Required to adjust margins
 \input{styleAndCommands}
-\title{\vspace{-3ex}Assignment 1\vspace{-7ex}}
+\title{\vspace{-5ex}Assignment 1, FE5116 (2014/2015, Semester 2)\vspace{-7ex}}
 \date{}
 \begin{document}
 \maketitle
@@ -22,7 +18,7 @@ Below is a recursive algorithm to tackle the problem.
 It places the queens column by column incrementally. 
 At placing column $i$, it picks a safe row against the previous placed columns ($1$ to $i-1$), 
 and proceed to place the remaining columns using recursion. 
-The way to check if a row $r$ is safe against the previously placed queen at ($r_p$, $c_p$) is to check if they are in the same row ($r == r_p$), the same column (by definition because we check only the previous columns), or the same diagonal ($r - i == r_p - r_p$).
+The way to check if a row $r$ is safe against the previously placed queen at ($r_p$, $c_p$) is to check if they are in the same row ($r = r_p$), the same column (by definition because we check only the previous columns), or the same diagonal ($r - i = r_p - r_p$ or $r + i = r_p + r_p$).
 A solution is found if safe rows can be found all the way till the last column.
 Otherwise, the algorithm rolls back and picks the next safe row at column i.
 Below is the pseudo code of this algorithm.
@@ -55,13 +51,13 @@ But you should not brute force the problem.
 The output of your program should be in this format:
 \begin{verbatim}
    1   0   0   0   0   0   0   0
-   0   0   1   0   0   0   0   0
-   0   0   0   0   0   1   0   0
-   0   0   0   0   0   0   0   1
-   0   0   0   0   0   0   1   0
-   0   0   0   1   0   0   0   0
-   0   1   0   0   0   0   0   0
    0   0   0   0   1   0   0   0
+   0   0   0   0   0   0   0   1
+   0   0   0   0   0   1   0   0
+   0   0   1   0   0   0   0   0
+   0   0   0   0   0   0   1   0
+   0   1   0   0   0   0   0   0
+   0   0   0   1   0   0   0   0
 \end{verbatim}
 where $1$ represents the positions of the queens.
 
@@ -78,4 +74,9 @@ Implement three functions
 \end{align*}
 \end{itemize}
 and plot their convergence chart with X-axis the number of terms used $nTerm$, and Y-axis the error.
+
+\subsection*{Assignment 1c. Decimal to Ternary conversion}
+Modify the example function \verb=decInt2BinInt(x, nbits)= given in the lecture to  
+a function that converts decimal integer to ternary integer (base-3): \verb=decInt2TerInt(x, nbits)=.
+
 \end{document}

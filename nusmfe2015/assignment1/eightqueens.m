@@ -5,7 +5,8 @@ function eightqueens
   function safe = isSafe (row, col, prevQ)
   safe = true;
   for i = 1:(col-1)
-    if (prevQ(i) == row || prevQ(i) - i == row - col)  # horizontal or diagonal
+    if (prevQ(i) == row || prevQ(i) - i == row - col || prevQ(i) + i \
+	== row + col)  # horizontal or diagonal
       safe = false;
     endif
   endfor
