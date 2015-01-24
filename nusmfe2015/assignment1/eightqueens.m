@@ -1,6 +1,7 @@
 function eightqueens
 
-  # check if it is safe to place a queen at (row, col) given the previous queens before column (col - 1) are placed in prevQ
+  # check if it is safe to place a queen at (row, col)
+  # given the previous queens before column (col - 1) are placed in prevQ
   function safe = isSafe (row, col, prevQ)
   safe = true;
   for i = 1:(col-1)

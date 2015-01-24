@@ -5,7 +5,7 @@
 
 \documentclass[12pt,a4paper,hidelinks,fleqn]{article}            % Article 12pt font for a4 paper while hiding links
 \usepackage[margin=1in]{geometry}                          % Required to adjust margins
-\input{../styleAndCommands}
+\input{styleAndCommands}
 \title{\vspace{-3ex}Assignment 1\vspace{-7ex}}
 \date{}
 \begin{document}
@@ -21,7 +21,8 @@ The detailed description of the problem and possible algorithm to solve the prob
 Below is a recursive algorithm to tackle the problem.
 It places the queens column by column incrementally. 
 At placing column $i$, it picks a safe row against the previous placed columns ($1$ to $i-1$), 
-and proceed to place the remaining columns. 
+and proceed to place the remaining columns using recursion. 
+The way to check if a row $r$ is safe against the previously placed queen at ($r_p$, $c_p$) is to check if they are in the same row ($r == r_p$), the same column (by definition because we check only the previous columns), or the same diagonal ($r - i == r_p - r_p$).
 A solution is found if safe rows can be found all the way till the last column.
 Otherwise, the algorithm rolls back and picks the next safe row at column i.
 Below is the pseudo code of this algorithm.

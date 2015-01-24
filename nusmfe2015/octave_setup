@@ -1,0 +1,17 @@
+
+-- intall gnuplot with qt and direct octave plot to gnuplot with qt
+brew intall gnuplot --with-qt
+echo "setenv('GNUTERM','qt')" > ~/.octaverc
+
+;; octave emacs mode                                                
+;; https://www.gnu.org/software/octave/doc/interpreter/Using-Octave$
+(autoload 'octave-mode "octave-mod" nil t)                          
+(setq auto-mode-alist                                               
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))              
+                                                                    
+(add-hook 'octave-mode-hook                                         
+          (lambda ()                                                
+            (abbrev-mode 1)                                         
+            (auto-fill-mode 1)                                      
+            (if (eq window-system 'x)                               
+                (font-lock-mode 1)))) 
