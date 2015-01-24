@@ -33,13 +33,14 @@ Below is the pseudo code of this algorithm.
     \Input{prevQ: one dimensional array of length $i-1$, indicating the queens before column i are placed at (prevQ(k), k) for k $\in [1, i-1]$}
     \Output{succeed: whether it is possible to place the queens}
 	\If{ $ i > 8 $} {
-		solution found, print it out
+		solution found, print it out \\
+		succeed = true;
 	}
     \Else{ 
     	succeed = false; \\
     	\For{$r \gets 1$ \textbf{to} $8$} {
 		  \If{ placing a queen at $(r, i)$ does not threaten prevQ} {
-			\If {place(prevQ + $(r, i)$, $i+1$) == true} {
+			\If {PlaceQ(prevQ + $(r, i)$, $i+1$) == true} {
 		        succeed = true; \\
 		        break; \# we are interested only in 1 solution so stop if we find one.
 		        }		  
