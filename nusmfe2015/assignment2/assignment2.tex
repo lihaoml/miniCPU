@@ -55,11 +55,11 @@ construct a function
     strike: the strike you want to query
 \end{verbatim}
 \vspace{-0.6cm}
-using cubic spline interpolator provided by Octave:
-\url{https://www.gnu.org/software/octave/doc/interpreter/One_002ddimensional-Interpolation.html}.
-Note that you need to enable "extrap" to allow extrapolating the strikes outside the range of the given five points.
-The function returns a $\sigma$ for an input \verb=strike=.
-The function should check for the validity of the inputs and throws an error for invalid input.
+using cubic spline interpolator provided by Octave (
+\url{https://www.gnu.org/software/octave/doc/interpreter/One_002ddimensional-Interpolation.html})
+for the strikes within the range of $[K_1, K_5]$. For the ranges outside, we extrapolate using $\sigma_1$ for the left wing and $\sigma_5$ for the right wing (flat wings).
+The function returns a $\sigma$ for any positive input \verb=strike=.
+The function should also check the validity of the inputs and throws an error for invalid input.
 
 \paragraph{b)}
 In many markets, traders do not quote options in absolute strikes. 
