@@ -8,13 +8,14 @@
 \maketitle
 
 \subsection*{1. Numerical Derivatives}
-Write a function \verb=MyFirstDerive(x0, h, ys)= to compare three methods of computing the derivative $f'(x_0)$
-at point $x_0$ for an unknown function $f(x)$.
+Write a function \verb=MyFirstDeriv(f, x0, h)= to compare three methods of computing the derivative $f'(x_0)$
+at point $x_0$ for a function $f(x)$ of an unknown form.
 The input \verb=x0= and \verb=h= are two double variables,
-and \verb=ys= is an array representing the given 5 point samples $[f(x_0-h), f(x_0-\frac{h}{2}), f(x_0), f(x_0+\frac{h}{2}), f(x_0+h)]$
-of the function $f(x)$.
+and \verb=f= is a function from double to double. 
 
-The function derives $f'(x_0)$ in three ways:
+The first step of \verb=MyFirstDeriv(f, x0, h)= is to construct 5 sample points: $[f(x_0-h), f(x_0-\frac{h}{2}), f(x_0), f(x_0+\frac{h}{2}), f(x_0+h)]$, denoted as \verb=ys=.
+Then, it derives the first derivative $f'(x_0)$ in three ways:
+
 \vspace{-6mm}
 \paragraph{a)} List the four taylor expansion at the four points $f(x_0-h), f(x_0-\frac{h}{2}), f(x_0+\frac{h}{2}), f(x_0+h)$, 
 multiply each by coefficient $b_j$ for $j\in\{1, 2, 3, 4\}$, 
@@ -35,7 +36,7 @@ print out the coefficients \verb=cs= such that $p'(x_0)$ = \verb=cs .* ys=,
 and print out the derivative $p'(x_0)$.
 Again, compare the coefficients \verb=cs= with the coefficients derived from in \textbf{a)}.
 
-What do you observe?
+What do you observe? The submission should contain only a single file \verb=MyFirstDeriv.m= that implements the function \verb=MyFirstDeriv(f, x0, h)=.
  
 \subsection*{2. Market Implied Volatilities}
 
@@ -91,6 +92,9 @@ Therefore you need to partially apply all the other inputs to the \verb=SimpleDe
 Check \verb=partialapplication.m= in the lecture material on how to partially apply arguments to a function.
 You can assume the input \verb=ks= and \verb=vs= are good quotes such that the $\Delta_{simple}$ function is monotonic to $K$.)
 
+
+The submission should contain only 3 .m files: ImpliedVol.m, SimpleDelta.m, and DeltaToStrike.m. Each implements its corresponding function.
+
 \subsection*{3. Option Pricing with Quadrature}
 The present value of a European put option with strike at $K$ and expiry at $T$ is
 \begin{align*}
@@ -100,7 +104,7 @@ where $r$ is the risk-free rate and $\probQ$ is the risk-neutral measure.
 The drift of the spot price S under $\probQ$-measure is $r$.
 Under Black-Scholes assumption, $S_T$ is log-normally distributed with probability density function
 \begin{align*}
-pdf(S_T) = \frac{1}{\sigma S_T\sqrt{2\pi T}} \exp\left(- \frac{(\ln S_T - r)^2}{ 2\sigma^2 T} \right)
+pdf(S_T) = \frac{1}{\sigma S_T\sqrt{2\pi T}} \exp\left(- \frac{(\ln S_T - \ln S_0 - rT)^2}{ 2\sigma^2 T} \right)
 \end{align*}
 The put price is then
 \begin{align}
@@ -133,6 +137,22 @@ where $N(\cdot)$ is the standard cumulative normal function and is implemented a
 \begin{align*}
 d_{\pm} = \frac{ln\frac{S_0}{K} + (r \pm \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}.
 \end{align*}
+
+The submission should contain a single file \verb=q3.m= that can be run without any parameter. 
+All the functions \verb=PutIntegral, PutIntegralS=, and the analytic formula should be inside the \verb=q3.m= file. 
+
+
+\subsection*{Submission Checklist}
+Below is the list of required files in the submission package:
+\begin{itemize}
+\item Q1: \verb=MyFirstDeriv.m=
+\item Q2: \verb=ImpliedVol.m, SimpleDelta.m, DeltaToStrike.m=
+\item Q3: \verb=q3.m=
+\end{itemize}
+You do not need to create sub-folders for the questions. 
+A brief report (in PDF format) is welcome if you feel the need to explain certain functions.
+To re-iterate, the filename of the zip file should be in the format of \verb=Ex2_name1_matricNumber1_name2_matricNumber2.zip=.
+And the matric number should contain the last alphabetic letter if applicable. 
 
 
 \end{document}
