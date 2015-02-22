@@ -22,17 +22,17 @@ multiply each by coefficient $b_j$ for $j\in\{1, 2, 3, 4\}$,
 construct a linear system of $b_j$ such that the order 0, 2, and 3 disappear, and order 1 term becomes 1, 
 solve for $b_i$, 
 print out $b_i$,
-derive the coefficients \verb=cs= such that $f'(x_0)$ = \verb=cs .* ys=,
+derive the coefficients \verb=cs= such that $f'(x_0)$ = \verb=sum(cs .* ys)=,
 and print out \verb=cs= and $f'(x_0)$. 
 \vspace{-6mm}
 \paragraph{b)} Compute $f'(x_0)$ using Richardson extrapolation with the central difference g(h) and the step sizes $h$ and $\displaystyle \frac{h}{2}$,
-derived the coefficients \verb=cs= such that $f'(x_0)$ = \verb=cs .* ys=,
+derived the coefficients \verb=cs= such that $f'(x_0)$ = \verb=sum(cs .* ys)=,
 print out \verb=cs= and $f'(x_0)$. Compare the coefficients \verb=cs= with the coefficients derived in part \textbf{a)}.
 \vspace{-6mm}
 \paragraph{c)} Construct a $4^{th}$ order polynomial $p(x) = \sum_{i=0}^4 a_i x^i$ that passes through the five given points, 
 compute $p'(x_0)$ analytically, 
 print out the polynomial,
-print out the coefficients \verb=cs= such that $p'(x_0)$ = \verb=cs .* ys=,
+print out the coefficients \verb=cs= such that $p'(x_0)$ = \verb=sum(cs .* ys)=,
 and print out the derivative $p'(x_0)$.
 Again, compare the coefficients \verb=cs= with the coefficients derived from in \textbf{a)}.
 
