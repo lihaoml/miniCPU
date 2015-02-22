@@ -104,7 +104,7 @@ where $r$ is the risk-free rate and $\probQ$ is the risk-neutral measure.
 The drift of the spot price S under $\probQ$-measure is $r$.
 Under Black-Scholes assumption, $S_T$ is log-normally distributed with probability density function
 \begin{align*}
-pdf(S_T) = \frac{1}{\sigma S_T\sqrt{2\pi T}} \exp\left(- \frac{(\ln S_T - \ln S_0 - rT)^2}{ 2\sigma^2 T} \right)
+pdf(S_T) = \frac{1}{\sigma S_T\sqrt{2\pi T}} \exp\left(- \frac{(\ln S_T - \ln S_0 - rT + \frac{1}{2}\sigma^2T)^2}{ 2\sigma^2 T} \right)
 \end{align*}
 The put price is then
 \begin{align}
