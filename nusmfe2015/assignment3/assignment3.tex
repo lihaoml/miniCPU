@@ -1,0 +1,99 @@
+
+\documentclass[12pt,a4paper,hidelinks,fleqn]{article}            % Article 12pt font for a4 paper while hiding links
+\usepackage[margin=1in]{geometry}                          % Required to adjust margins
+\input{styleAndCommands}
+\title{\vspace{-5ex}Assignment 3, FE5116 (2014/2015, Semester 2)\vspace{-7ex}}
+\date{}
+\begin{document}
+\maketitle
+
+\subsection*{Excercise 3.1}
+ 
+This excercise considers stock paying pre-defined discrete dividend rates \verb=div_rs= at discrete time \verb=div_ts=. 
+\vspace{-1cm}
+\paragraph{a)} Implement a function 
+\vspace{-5mm}
+\begin{verbatim}
+europeanBinomialPricerD(spot, sigma, rf, T, N, payoff, div_ts, div_rs)
+\end{verbatim}
+\vspace{-5mm}
+that prices European payoff on this stock using CRR binomial tree. Both \verb=div_ts= and \verb=div_rs= are array of doubles.
+The argument \verb=payoff= is a function from the spot price at expiry to the payoff (same as in the lecture notes). The risk free rate \verb=rf= is constant.
+
+For 
+\vspace{-1cm} 
+\begin{verbatim}
+    spot = 100
+    sigma = 20%
+    rf = 4%
+    T = 2
+    div_ts = [0.5, 1.0, 1.5]
+    div_rs = [5%, 5%, 5%]
+\end{verbatim} 
+price an European call option with strike = $85$ for different time steps \verb=N=,
+and plot the error against analytical formula. The analytic formula for European call option on discrete dividend paying stock is
+\begin{align*}
+C(S_0, K, T) = e^{-rT} (F N(d_+) - K N(d_-))
+\end{align*}
+where $N(\cdot)$ is the standard cumulative normal function and is implemented as \verb=normcdf= in Octave, and
+\begin{align*}
+F = S_0 e^{rT} \Pi_i^n (1-\delta_i), ~~
+d_{\pm} = \frac{ln\frac{F}{K}  \pm \frac{1}{2}\sigma^2T}{\sigma\sqrt{T}}.
+\end{align*}
+
+\vspace{-1cm}
+\paragraph{b)} Extend the function in a) to 
+\vspace{-5mm}
+\begin{verbatim}
+americanBinomialPricerD(spot, sigma, rf, T, N, payoff, div_ts, div_rs)
+\end{verbatim}
+\vspace{-5mm}
+that prices American style options. Plot the prices for American call option strike at 100 for different time steps N, and overlay the plot with the plot generated in a). 
+Care should be taken that on the dividend paying time, 
+the early exercise decision should be made by comparing the continuation value of the option against the intrinsic value calculated form the more preferable stock price (before or after dividend adjustment). 
+
+\vspace{-1cm}
+\paragraph{c)} For the same test case in a) and time step \verb-N=100-, 
+price a European Call, European Put, European Straddle (straddle payoff is $\max(S-K, K-S)$) options with strike = 85. 
+Compare the three prices.
+\vspace{-1cm}
+\paragraph{d)} For the same test case in a) and time step \verb-N=100-, 
+price a American Call, American Put, American Straddle options with strike = 85. 
+Compare the three prices.
+
+\subsection*{Excercise 3.2}
+Implement two trinomial tree pricers for European options on a dividend-free stock:  
+\vspace{-5mm}
+\begin{verbatim}
+europeanTrinomialPricerCRR(spot, sigma, rf, T, N, payoff)
+europeanTrinomialPricerEQ(spot, sigma, rf, T, N, payoff)
+\end{verbatim}
+\vspace{-5mm}
+where \verb=europeanTrinomialPricerCRR= construct the tree using combined two steps of CRR binomial tree,
+\verb=europeanTrinomialPricerEQ= uses equal probabilities ($m=1, pu=pm=pd$).
+
+For 
+\vspace{-1cm} 
+\begin{verbatim}
+    spot = 100
+    sigma = 20%
+    rf = 4%
+    T = 2
+    div_ts = [0.5, 1.0, 1.5]
+    div_rs = [5%, 5%, 5%]
+\end{verbatim} 
+
+Plot the convergence chart (error versus discretization time septs N) of the two trinomial tree pricers and the CRR binomial tree pricers implemented in Excercise 3.1 a) for K = 70, 90, 110, 130.
+
+\subsection*{Submission Checklist}
+Below is the list of required files in the submission package:
+\begin{itemize}
+\item Exercise 3.1: \verb=europeanBinomialPricerD.m, americanBinomialPricerD.m= that implement the two pricers, and \verb=ex1.m= that calls the pricers to generate the test cases and plots, and a \verb=ex1.pdf= that summarize the results briefly.
+\item Exercise 3.2: \verb=europeanTrinomialPricerCRR.m, europeanTrinomialPricerEQ.m= that implement the two pricers, and \verb=ex2.m= that calls the pricers to generate the test plots, and a brief \verb=ex2.pdf= that summarize the test results.
+\end{itemize}
+You do not need to create sub-folders for the questions. 
+To re-iterate, the filename of the zip file should be in the format of \verb=Ex3_name1_matricNumber1_name2_matricNumber2.zip=.
+And the matric number should contain the last alphabetic letter if applicable. 
+
+
+\end{document}
