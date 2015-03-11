@@ -5,7 +5,7 @@ function sigma = ImpliedVol(ks, vs, strike)
   else if (strike >= ks(5))
      sigma = vs(5);
   else
-     sigma = interp1(ks, vs, strike, "cubic");
+     sigma = interp1(ks, vs, strike, "spline");
   end
   end
 

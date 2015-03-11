@@ -37,8 +37,8 @@ function pi
   end
   endfunction
   
-  myPi1(100)
-  myPi2(100)
-  myPi3(100)
+  myPi1(1000)
+  myPi2(1000)
+  myPi3(1000)
 
 endfunction
