@@ -1,4 +1,4 @@
-function eightqueens
+function eightqueens(n)
 
   # check if it is safe to place a queen at (row, col)
   # given the previous queens before column (col - 1) are placed in prevQ
@@ -15,16 +15,16 @@ function eightqueens
   # place the queen for the column "col" given the previous placement (before col) in prevQ
   function succeed = place(prevQ, col)
   succeed = false;
-  if (col > 8)
+  if (col > n)
     succeed = true;
     # display solution
-    solutionMat = zeros(8, 8);
-    for i = 1:8
+    solutionMat = zeros(n, n);
+    for i = 1:n
       solutionMat(i, prevQ(i)) = 1;
     endfor
     solutionMat
   else
-    for r = 1:8  # check each (r, col)
+    for r = 1:n  # check each (r, col)
       if ( isSafe (r, col, prevQ) ) # go to next column
         prevQ(col) = r;
         if ( place(prevQ, col+1) )
