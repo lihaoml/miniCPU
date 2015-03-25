@@ -74,7 +74,7 @@ dW_S dW_L = \rho dt,
 \begin{frame}{Gabillon Two Factor Model - Model Covariance}
 Applying Ito to \eqref{eq:gab2-diffusion} we can derive the diffusion of the log prices:
 \begin{align*}
-d \ln F(t, T) & = \frac{1}{2}[ \sigma_S^2 e^{-2\alpha(T-t)} + \sigma_L^2(1-e^{-\alpha(T-t)})^2 \\
+d \ln F(t, T) & = - \frac{1}{2}[ \sigma_S^2 e^{-2\alpha(T-t)} + \sigma_L^2(1-e^{-\alpha(T-t)})^2 \\
               & + 2 \rho \sigma_S \sigma_L \left(e^{-\alpha(T-t)} - e^{-2\alpha(T-t)}\right)] dt\\
               & + \sigma_L(1-e^{-\alpha(T-t)}) dW_L(t) 
                 + \sigma_S e^{-\alpha(T-t)} dW_S(t)
