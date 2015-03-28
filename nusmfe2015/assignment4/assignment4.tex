@@ -183,13 +183,13 @@ so a solver (e.g., \verb=fsolve()=, \url{https://www.gnu.org/software/octave/doc
 
 You should implement two functions
 \begin{verbatim}
-charHestonODE(sigmaV, kappa, theta, rho, r, u, tau, nT)
-charHestonAnalytic(sigmaV, kappa, theta, rho, r, u, tau)
+charHestonODE(sigmaV, kappa, theta, rho, u, tau, nT)
+charHestonAnalytic(sigmaV, kappa, theta, rho, u, tau)
 \end{verbatim}
 that solve for $D(\tau, u)$. 
 Then compare the two solutions. For each $\tau \in [0.1, 0.5, 1, 2]$, and
 \begin{align*}
-~\theta = 1, ~\kappa = 0.2, ~\sigma_v = 2.0, ~\rho = -0.3, ~r = 0.02
+~\theta = 1, ~\kappa = 0.2, ~\sigma_v = 2.0, ~\rho = -0.3
 \end{align*}
 plot the function $D$ of $a = [0, 0.1, 0.2, ..., 20.0]$ and $b = -2$ (recall that $u = a+ib$). 
 Each plot should overlay the PDE result with the closed form solution.
