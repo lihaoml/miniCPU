@@ -1,10 +1,7 @@
 function strike = DeltaToStrike(F, T, ks, vs, d)
-
-f = @(k) (SimpleDelta(F, T, ks, vs, k)-d);
-
-cs = bisection(f, 0.01, 100, 0.0001);
-strike = cs(1);
-
+  f = @(k) (SimpleDelta(F, T, ks, vs, k)-d);
+  cs = bisection(f, F*0.001, F*1000, 1e-6);
+  strike = cs(1);
 endfunction
 
 
