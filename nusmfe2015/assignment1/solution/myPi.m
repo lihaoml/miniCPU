@@ -1,4 +1,4 @@
-function pi
+function myPi
 
   function pi = myPi1 (nTerm)
   pi(1) = 0;
@@ -36,9 +36,18 @@ function pi
     end
   end
   endfunction
+
+  n = 10;
   
-  myPi1(1000)
-  myPi2(1000)
-  myPi3(1000)
+  pi1 = myPi1(n);
+  pi2 = myPi2(n);
+  pi3 = myPi3(n);
+
+  pi1
+  abs(pi1 - pi);
+  plot([1:length(pi1)], pi1);
+  semilogy([1:length(pi1)], pi1);
+  semilogy([1:length(pi2)], pi2);
+  semilogy([1:length(pi3)], pi3);
 
 endfunction
