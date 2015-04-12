@@ -1,0 +1,275 @@
+\documentclass[12pt,a4paper,hidelinks,fleqn]{article}            % Article 12pt font for a4 paper while hiding links
+\usepackage[margin=1in]{geometry}                          % Required to adjust margins
+\input{styleAndCommands}
+\title{\vspace{-5ex}Project, FE5116 (2014/2015, Semester 2)\vspace{-7ex}}
+\date{}
+\begin{document}
+\maketitle
+\paragraph{Model Parameter Calibration}
+
+Gabillon model dynamics
+\begin{align}
+\frac{dF(t, T)}{F(t, T)} = \sigma_L (1 - e^{-\alpha(T-t)}) dW_L(t) + \sigma_S e^{-\alpha(T-t)} dW_s(t)
+\label{eq:gab2-diffusion}
+\end{align}
+\begin{itemize}
+\item $F(t, T)$ represents the price at time $t$ of the futures contract that delivers the underlying commodity asset at time $T$,
+\item $W_S$ and $W_L$ are the two Brownian motions that drives the short term and long term factors and they are correlated:
+\begin{align*}
+dW_S dW_L = \rho dt,
+\end{align*}
+\item $\sigma_S$ is the volatility of the short term factor
+\item $\sigma_L$ is the volatility of the long term factor
+\item $\alpha$ is the mean reversion speed. When $\alpha = 0$ the model reduced to a single factor spot model. 
+\end{itemize}
+
+Applying Ito to \eqref{eq:gab2-diffusion} we can derive the diffusion of the log prices:
+\begin{align*}
+d \ln F(t, T) & = - \frac{1}{2}[ \sigma_S^2 e^{-2\alpha(T-t)} + \sigma_L^2(1-e^{-\alpha(T-t)})^2 \\
+              & + 2 \rho \sigma_S \sigma_L \left(e^{-\alpha(T-t)} - e^{-2\alpha(T-t)}\right)] dt\\
+              & + \sigma_L(1-e^{-\alpha(T-t)}) dW_L(t) 
+                + \sigma_S e^{-\alpha(T-t)} dW_S(t)
+\end{align*}
+For futures contracts expiring at $T_1$ and $T_2$, we have
+\begin{align*}
+& d\ln F(t, T_1) d\ln F(t, T_2) \\
+& = [\sigma_L^2(1-e^{-\alpha(T_1-t)} - e^{-\alpha(T_2-t)} + e^{-\alpha(T_1+T_2)+2\alpha t}) \\
+& + \sigma_S^2 e^{-\alpha(T_1+T_2) + 2\alpha t} \\
+& +\rho \sigma_S\sigma_L(e^{-\alpha(T_1-t)} + e^{-\alpha(T_2-t)} - 2e^{-\alpha(T_1+T_2)+2\alpha t}) ] dt
+\end{align*}
+
+The model covariance is
+\begin{align}
+&Cov\left(\ln\frac{F(t+\Delta_t, T_1)}{F(t, T_1)}, \ln\frac{F(t+\Delta_t, T_2)}{F(t, T_2)}\right) \\
+&= \int_t^{t+\Delta t} d\ln F(t, T_1) d\ln F(t, T_2) \\
+&= \sigma_L^2\Delta_t + (\rho\sigma_S\sigma_L - \sigma_L^2)(e^{-\alpha T_1} + e^{-\alpha T_2})\left(\frac{e^{\alpha(t+\Delta_t)} - e^{\alpha t}}{\alpha}\right) \\
+&~~+ (\sigma_S^2+\sigma_L^2 - 2\rho\sigma_S\sigma_L)e^{-\alpha(T_1+T_2)}\left(\frac{e^{2\alpha(t+\Delta_t)} - e^{2\alpha t}}{2\alpha}\right)
+\end{align}
+
+The calibration problem is defined as finding $\sigma_S, \sigma_L, \rho, \alpha$ such that the objective function 
+\begin{align}
+&Obj(\sigma_S, \sigma_L, \rho, \alpha) \\
+&= \sum_{i=1}^{N} \sum_{j=1}^{N} \left(Cov\left(\ln\frac{F(\Delta_t, Ti)}{F(0, T_i)}, \ln\frac{F(\Delta_t, Tj)}{F(0, T_j)}\right) - Cov_H (R_i, R_j) \right)^2
+\end{align}
+is minimized. 
+
+The historical data in \verb=hist.dat= can be used to generate the historical covariance matrix.
+\begin{itemize}
+\item The daily log returns
+\begin{align*}
+R(t, T_i) = \ln \frac{P(t+\Delta_t, t+\Delta_t + T_i)}{P(t, t+T_i)}.
+\end{align*}
+\item Let us denote $R_i$ as the time series of log returns for the contract maturity $T_i$.
+We can then estimate the historical covariance $Cov_H (R_i, R_j)$.
+\end{itemize}
+\begin{verbatim}
+function histmat = histCovar(hist)
+  # daily log return series
+  rets = zeros (rows(hist) -1, columns(hist));
+  for i = 1:rows(hist)-1
+    rets(i, :) = log(hist(i, :) ./ hist(i+1, :));
+  endfor
+  histmat = rets' * rets ./ (rows(hist)-1);
+endfunction
+\end{verbatim}
+
+Now, to calibrate the Gabillon two factor model, we need to find the model parameters $\sigma_S, \sigma_L, \alpha, \rho$
+such that the model covariance matches as close as possible to the estimated historical covariance matrix.
+
+So we first construct the model covariance function:
+\begin{small}
+\begin{verbatim}
+function c = modelCovar(sigmaL, sigmaS, rho, alpha, dt, T1, T2)
+  sigmaL2 = sigmaL * sigmaL;
+  rSL = rho * sigmaS * sigmaL; 
+  e1 = exp (-alpha * T1);
+  e2 = exp (-alpha * T2);
+  e3 = exp (alpha * dt);
+  c = sigmaL2 * dt + (rSL - sigmaL2) * (e1 + e2) * (e3 - 1) / alpha \
+  + (sigmaS * sigmaS + sigmaL2 - 2 * rSL) * (e1 * e2) * (e3 * e3 -1) / alpha / 2.0;
+endfunction
+\end{verbatim}
+\end{small}
+
+Then the objective function 
+\begin{verbatim}
+function err = objFun(histmat, dt, tenors, sigmaL, sigmaS, rho, alpha)
+  err = 0;
+  for i = 1:length(tenors)
+    for j = 1:length(tenors)
+      diff = modelCovar(sigmaL, sigmaS, rho, alpha, dt, tenors(i), tenors(j)) - histmat(i, j);
+      err += diff * diff;
+    endfor
+  endfor
+endfunction
+\end{verbatim}
+And the calibration main function:
+\begin{verbatim}
+function [sigmaL, sigmaS, rho, alpha] = gab2Calib(hist, tenors)
+  histmat = histCovar(hist, tenors)
+  dt = 1/250;
+  f = @(params) objFun(histmat, dt, tenors, params(1), params(2), params(3), params(4));
+  sigmaL_init = sqrt(histmat(length(tenors), length(tenors)) / dt)
+  sigmaS_init = sqrt(histmat(1, 1) / dt)
+  rho_init = histmat(1, length(tenors))  / dt / sigmaL_init / sigmaS_init
+  init = [ sigmaL_init, sigmaS_init, rho_init, 0.5]
+
+  [x] = sqp (init, f, [], @constraint);
+  x
+  f(x)
+endfunction
+\end{verbatim}
+Note that the initial guess are based on the volatility of the front and end contracts (short and long).
+The constraints are defined as
+\begin{verbatim}
+function r = constraint(params)
+  r = [ params(3) + 1; 1 - params(3);  # -1 <= rho <= 1
+        params(2); params(1); params(2)-params(1); # sigmaS > sigmaL > 0
+        params(4)];  # alpha > 0
+endfunction
+\end{verbatim}
+
+\paragraph{Pricing Asian Option using MM2}
+The payoff of arithmetic Asian call option is $(A - K)_+$ where $A = \frac{1}{n}\sum F(t_i, T_i)$.  
+
+Under the assumption of log-normality, we can use the Black-Scholes formula:
+\begin{align*}
+Call(A, K, t_s) = e^{-rt_s}[M N(d_+) - KN(d_-)]
+\end{align*}
+where
+\begin{align*}
+d_{\pm} = \frac{\ln (M/K) \pm \frac{1}{2}S^2}{S}, 
+~M = E[A], ~S=\sqrt{Var[\ln A]}.
+\end{align*}
+and $N(.)$ is the standard norm cdf.
+
+The first moment of $A$ gives $M$:
+\begin{align*}
+M = E[A] = E[\frac{1}{n}\sum_{i=1}^n F(t_i, T_i)] = \frac{1}{n}\sum_{i=1}^n E[F(t_i, T_i)] = \frac{1}{n} \sum_{i=1}^n F(0, T_i)
+\end{align*}
+The second moment of $A$ gives $S$:
+\begin{align*}
+S^2 = Var[\ln A] = \ln \left( \frac{E[A^2]}{E[A]^2} \right)
+\end{align*}
+where
+\begin{align}
+E[A^2] = \frac{1}{n^2}\sum_{i=1}^n \sum_{j=1}^n E[F(t_i, T_i) F(t_j, T_j)] 
+\label{eq:sec-moment}
+\end{align}
+
+Recall that
+\begin{align*}
+d \ln F(t, T) & = \underbrace{- \frac{1}{2}[ \sigma_S^2 e^{-2\alpha(T-t)} + \sigma_L^2(1-e^{-\alpha(T-t)})^2  + 2 \rho \sigma_S \sigma_L \left(e^{-\alpha(T-t)} - e^{-2\alpha(T-t)}\right)]}_{\mu(t, T)} dt\\
+              & + \underbrace{\sigma_L(1-e^{-\alpha(T-t)})}_{\sigma_1(t, T)} dW_L(t) 
+                + \underbrace{\sigma_S e^{-\alpha(T-t)}}_{\sigma_2(t, T)} dW_S(t)
+\end{align*}
+so
+\begin{small}
+\begin{align*}
+& F(t, T) = F(0, T) \exp\left(\int_0^t \mu(t, T) dt  + \int_0^t \sigma_1(t, T) dW_L(t) + \int_0^t \sigma_2(t, T) dW_S(t)\right) \\
+&~~~\Downarrow \\
+& F(t_i, T_j) F(t_j, T_j) = F(0, T_i) F(0, T_j) \exp\left( \int_0^{t_i} \mu(t, T_i) dt + \int_0^{t_j} \mu(t, T_j) dt \right)\times\\
+&~~~~~~\exp\left( 
+\int_0^{t_i} \sigma_1(t, T_i) dW_L(t) + \int_0^{t_i} \sigma_2(t, T_i) dW_S(t)
++ \int_0^{t_j} \sigma_1(t, T_j) dW_L(t) + \int_0^{t_j} \sigma_2(t, T_j) dW_S(t)
+\right) \\
+\end{align*}
+without loss of generality, we assume $t_i < t_j$,
+\begin{align*}
+& F(t_i, T_j) F(t_j, T_j) = F(0, T_i) F(0, T_j) \exp\left( \int_0^{t_i} (\mu(t, T_i) + \mu(t, T_j)) dt \right)\times\\
+&~~~~~~\underbrace{\exp\left( 
+\int_0^{t_i} (\sigma_1(t, T_i) + \sigma_1(t, T_j)) dW_L(t) 
++ \int_0^{t_i} (\sigma_2(t, T_i) + \sigma_2(t, T_j)) dW_S(t) \right)}_{B} \times \\
+&~~~~~~\underbrace{\exp\left( \int_{t_i}^{t_j} \mu(t, T_j) dt + 
+\int_{t_i}^{t_j} \sigma_1(t, T_j) dW_L(t) + \int_{t_i}^{t_j} \sigma_2(t, T_j) dW_S(t)
+\right)}_{C} \\
+\end{align*}
+Note that $B$ and $C$ are independent and $E[C] = 1$ since $\mu = -\frac12(\sigma_1^2 + \sigma_2^2 + 2\rho \sigma_1 \sigma_2)$, so
+\begin{align*}
+& E[BC] = E[B]E[C] = E[B] \\ 
+& = \exp\left[\int_0^{t_i}\left( -\mu(t, T_i) - \mu(t, T_j) + \sigma_{1, i}(t)\sigma_{1, j}(t) + \sigma_{2, i}(t)\sigma_{2,j}(t) + \rho \sigma_{1, i}(t) \sigma_{2, j}(t) + \rho \sigma_{2, i} \sigma_{1, j}(t)\right) dt\right]
+\end{align*}
+Note that we simplified the notation $\sigma_{1, i}(t) = \sigma_1(t, T_i)$.
+So 
+\begin{align*}
+E[F(t_i, T_j) F(t_j, T_j)] = & F(0, T_i) F(0, T_j) \times \\
+	& \left[\int_0^{t_i}\left(\sigma_{1, i}(t)\sigma_{1, j}(t) + \sigma_{2, i}(t)\sigma_{2,j}(t) + \rho \sigma_{1, i}(t) \sigma_{2, j}(t) + \rho \sigma_{2, i} \sigma_{1, j}(t)\right) dt\right]
+\end{align*}
+\end{small}
+And
+\begin{align*}
+\begin{cases}
+\int_0^{t_i} \sigma_{1,i} (t) \sigma_{1, j} (t) dt = \sigma_L^2\left( 
+t_i - \frac{e^{-\alpha T_i} + e^{-\alpha T_j}}{\alpha} (e^{\alpha t_i} - 1) + \frac{e^{-\alpha(T_i + T_j)}}{2\alpha} (e^{2\alpha t_i} - 1)
+\right)\\
+\int_0^{t_i} \sigma_{2,i} (t) \sigma_{2, j} (t) dt = \sigma_S^2 \left(\frac{e^{-\alpha(T_i + T_j)}}{2\alpha} (e^{2\alpha t_i} - 1)\right) \\
+\int_0^{t_i} \rho \sigma_{1,i} (t) \sigma_{2, j} (t) dt = \rho \sigma_S \sigma_L \left( \frac{e^{-\alpha T_j}}{\alpha} (e^{\alpha t_i - 1}) - \frac{e^{ - \alpha(T_i + T_j)}}{2\alpha}(e^{2\alpha t_i} - 1)\right) \\
+\int_0^{t_i} \rho \sigma_{2,i} (t) \sigma_{1, j} (t) dt = \rho \sigma_S \sigma_L \left( \frac{e^{-\alpha T_i}}{\alpha} (e^{\alpha t_i - 1}) - \frac{e^{ - \alpha(T_i + T_j)}}{2\alpha}(e^{2\alpha t_i} - 1)\right)\\
+\end{cases}
+\end{align*}
+
+\begin{align*}
+E[A^2] = \frac{1}{n^2}\sum_{i=1}^n \sum_{j=1}^n E[F(t_i, T_i) F(t_j, T_j)] 
+\end{align*}
+
+\paragraph{MM2 Source code}
+\begin{verbatim}
+function pv = mm2Gab2AsianCall(sigmaL, sigmaS, rho, alpha, priceCurve, ti_s, Ti_s, K, rf, T)
+  m = sum(arrayfun(priceCurve, Ti_s)) / length(Ti_s)
+  v = 0;
+  for i = 1:length(Ti_s)
+    for j = 1:length(Ti_s)
+      v += expectation (sigmaL, sigmaS, rho, alpha, priceCurve, ti_s(i), ti_s(j), Ti_s(i), Ti_s(j));
+    endfor
+  endfor
+  v = v / length(Ti_s) / length(Ti_s);
+  var = v / m / m
+  d1 = (log (m/K) + 0.5 * var) / sqrt(var);
+  d2 = (log (m/K) - 0.5 * var) / sqrt(var);
+  pv = exp(-rf*T) * (m * normcdf(d1) - K*normcdf(d2))
+endfunction
+
+function e = expectation (sigmaL, sigmaS, rho, alpha, priceCurve, ti, tj, Ti, Tj)
+  t = min(ti, tj);
+  a = sigmaL*sigmaL * (t - (exp(-alpha * Ti) + exp(-alpha * Tj))/alpha * (exp(alpha * t) -1) + exp(-alpha *(Ti+Tj))/2/alpha * (exp(2*alpha * t) -1) );
+  b = sigmaS*sigmaS * exp(- alpha*(Ti + Tj)) / 2 / alpha * (exp(2*alpha * t) -1);
+  c = rho * sigmaL * sigmaS * (exp(-alpha*Tj)/alpha * (exp(alpha * t) -1) - exp(-alpha*(Ti+Tj)) / alpha /2 * (exp(2*alpha * t) -1) );
+  d = rho * sigmaL * sigmaS * (exp(-alpha*Ti)/alpha * (exp(alpha * t) -1) - exp(-alpha*(Ti+Tj)) / alpha /2 * (exp(2*alpha * t) -1) );
+  e = a + b + c + d;
+  e *= priceCurve(Ti) * priceCurve(Tj);
+endfunction 
+\end{verbatim}
+
+\paragraph{Test case}
+\begin{verbatim}
+load("testData/tenors.mat")
+load("testData/hist.mat")
+[sigmaL, sigmaS, rho, alpha] = gab2Calib(hist, tenors)
+priceCurve = @(t) interp1(tenors, hist(1, :), t);
+sigmaL
+ti_s = [0.1, 0.2, 0.3];
+Ti_s = [1, 1, 1];
+mm2Gab2AsianCall(sigmaL, sigmaS, rho, alpha, priceCurve, ti_s, Ti_s, 45, 0.01, 0.6)
+mm2Gab2AsianCall(sigmaL, sigmaS, rho, alpha, priceCurve, ti_s, Ti_s, 50, 0.01, 0.6)
+\end{verbatim}
+
+We test against a degenerate case that $\rho = 1, \sigma_L = \sigma_S$, the model degenerates to Black-Scholes:
+\begin{align*}
+\frac{dF(t, T)}{F(t, T)} = \sigma_S dW_S
+\end{align*}
+Pricing a single observation Asian option \verb~ti_s = [1], Ti_s = [1], T = 1~ using MM2 should give the same price as Black-Scholes formula.
+\begin{verbatim}
+"degenerate case"
+mm2Gab2AsianCall(sigmaS, sigmaS, 1.0, 0.1, priceCurve, [1], [1], 50, 0.01, 1)
+# BS reference for degenerate case
+var = sigmaS * sigmaS * 1.0
+m = priceCurve(1)
+K = 50;
+rf = 0.01;
+T = 1;
+d1 = (log (m/K) + 0.5 * var) / sqrt(var);
+d2 = (log (m/K) - 0.5 * var) / sqrt(var);
+bspv = exp(-rf*T) * (m * normcdf(d1) - K*normcdf(d2))
+\end{verbatim}
+\end{document}
+
