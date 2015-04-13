@@ -8,7 +8,6 @@ Ti_s = [1, 1, 1];
 mm2Gab2AsianCall(sigmaL, sigmaS, rho, alpha, priceCurve, ti_s, Ti_s, 45, 0.01, 0.6)
 mm2Gab2AsianCall(sigmaL, sigmaS, rho, alpha, priceCurve, ti_s, Ti_s, 50, 0.01, 0.6)
 
-
 "degenerate case"
 mm2Gab2AsianCall(sigmaS, sigmaS, 1.0, 0.1, priceCurve, [1], [1], 50, 0.01, 1)
 

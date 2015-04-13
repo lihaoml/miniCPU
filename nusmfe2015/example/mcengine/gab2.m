@@ -10,6 +10,16 @@ function recon = reconFun(alpha, rho, sigmaS, sigmaL, rnds, market, dt)
   recon = @(ti, Ti) reconst(market, alpha, rho, sigmaS, sigmaL, dx, dy, ti, Ti);
 endfunction 
 
+function obs = reconst(market, alpha, rho, sigmaS, sigmaL, dx, dy, ti, Ti)
+  dt = 1 / 250;
+  idx = ti / dt;
+  x = sum(dx(1:idx));
+  y = sum(dy(1:idx));
+  ret = -0.5 * varianceLn(ti, Ti, alpha, rho, sigmaS, sigmaL) + x + exp(-alpha*Ti)*y;
+  f0 = market.priceCurve(Ti);
+  obs = f0 * exp(ret);
+endfunction
+
 function [dx, dy] = diffuse( alpha, rho, sigmaS, sigmaL, rnds, dt)
   corr = [1, rho; rho, 1];
   cholC = chol(corr);
@@ -20,16 +30,6 @@ function [dx, dy] = diffuse( alpha, rho, sigmaS, sigmaL, rnds, dt)
     dx(i) = sigmaL * ws(1, i);
     dy(i) = (sigmaS * ws(2, i) - sigmaL * ws(1, i)) * exp(alpha * t);
   endfor
-endfunction
-
-function obs = reconst(market, alpha, rho, sigmaS, sigmaL, dx, dy, ti, Ti)
-  dt = 1 / 250;
-  idx = ti / dt;
-  x = sum(dx(1:idx));
-  y = sum(dy(1:idx));
-  ret = -0.5 * varianceLn(ti, Ti, alpha, rho, sigmaS, sigmaL) + x + exp(-alpha*Ti)*y;
-  f0 = market.priceCurve(Ti);
-  obs = f0 * exp(ret);
 endfunction
 
 function var = varianceLn(t, mat, alpha, rho, sigmaS, sigmaL)

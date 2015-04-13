@@ -12,7 +12,7 @@ function v = americanBinomialPricerD(spot, sigma, rf, T, N, payoff, div_ts, div_
   for k = 1 : length(div_rs)
       spotadj *= 1-div_rs(k);
   endfor
-
+  df = exp( -rf * dt );
   # terminal
   for i = 1 : (N+1)
       price(i) = payoff( spotadj * exp(2*(i-1)*u - N*u) );
@@ -47,8 +47,8 @@ function v = americanBinomialPricerD(spot, sigma, rf, T, N, payoff, div_ts, div_
         pS = max(pS, payoff(S * divadj));
       endif
 	    euro = price(j)*(1-p) + price((j+1))*(p);
-      price(j) = max(euro, pS);
+      price(j) = max(df*euro, pS);
     endfor
   endfor
-  v = exp(-rf*T) * price(1);
+  v = price(1);
 endfunction

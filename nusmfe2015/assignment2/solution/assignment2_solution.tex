@@ -30,10 +30,10 @@ and print out \verb=cs= and $f'(x_0)$.
 The Taylor expansion
 \begin{align*}
 \begin{cases}
-b_1 f(x - h) & = b_1 [f(x) - f'(x)h + frac12 f''(x)h^2 - \frac16 f^{(3)}(x)h^3] \\
-b_2 f(x - \frac12 h) & = b_2 [f(x) - f'(x) \frac12 h + \frac12 f''(x) \frac14 h^2 - \frac16 f'''(x)\frac18 h^3] \\
-b_3 f(x + 1/2 h) & = b_3 [f(x) + f'(x) \frac12 h + \frac12 f''(x) \frac14 h^2 + \frac16 f^{(3)}(x) \frac18 h^3] \\
-b_4 f(x + h) & = b_4 [f(x) + f'(x)h + \frac12 f''(x)h^2 + \frac16 f'''(x)h^3]
+b_1 f(x - h) & = b_1 [f(x) - f'(x)h + \frac12 f''(x)h^2 - \frac16 f^{(3)}(x)h^3] \\
+b_2 f(x - \frac12 h) & = b_2 [f(x) - f'(x) \frac12 h + \frac12 f''(x) \frac14 h^2 - \frac16 f^{(3)}(x)\frac18 h^3] \\
+b_3 f(x + \frac12 h) & = b_3 [f(x) + f'(x) \frac12 h + \frac12 f''(x) \frac14 h^2 + \frac16 f^{(3)}(x) \frac18 h^3] \\
+b_4 f(x + h) & = b_4 [f(x) + f'(x)h + \frac12 f''(x)h^2 + \frac16 f^{(3)}(x)h^3]
 \end{cases}
 \end{align*}
 We would like the sum of the right hand sides to be equal to $f'(x)$, 
@@ -326,4 +326,8 @@ function p = lognpdf(S, v, r, T, si)
   endif
 endfunction
 \end{verbatim}
+
+\begin{center}
+\includegraphics[scale=0.7]{quadrature}
+\end{center}
 \end{document}

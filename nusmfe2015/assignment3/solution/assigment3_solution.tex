@@ -114,7 +114,7 @@ function v = americanBinomialPricerD(spot, sigma, rf, T, N, payoff, div_ts, div_
   for k = 1 : length(div_rs)
       spotadj *= 1-div_rs(k);
   endfor
-
+  df = exp( -rf * dt );
   # terminal
   for i = 1 : (N+1)
       price(i) = payoff( spotadj * exp(2*(i-1)*u - N*u) );
@@ -149,10 +149,10 @@ function v = americanBinomialPricerD(spot, sigma, rf, T, N, payoff, div_ts, div_
         pS = max(pS, payoff(S * divadj));
       endif
 	    euro = price(j)*(1-p) + price((j+1))*(p);
-      price(j) = max(euro, pS);
+      price(j) = max(df*euro, pS);
     endfor
   endfor
-  v = exp(-rf*T) * price(1);
+  v = price(1);
 endfunction
 \end{verbatim}
 \end{small}
@@ -170,9 +170,9 @@ call = 13.315, Put = 6.0434, Straddle = 19.358
 \paragraph{d)} For the same test case in a) and time step \verb-N=100-, 
 price a American Call, American Put, American Straddle options with strike = 85. 
 Compare the three prices.
-\emph{For American payoff, Straddle < Call + Put}
+\emph{For American payoff, Straddle $<$ Call + Put}
 \begin{verbatim}
-call = 17.101, Put = 6.3302, Straddle = 21.991
+call = 18.089, Put = 6.4393, Straddle = 22.862
 \end{verbatim}
 
 

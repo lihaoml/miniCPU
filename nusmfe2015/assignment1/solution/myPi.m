@@ -5,6 +5,8 @@ function myPi (n)
   semilogy([1:length(pi1)], abs(pi1 - pi), "-r;myPi1;", 
            [1:length(pi2)], abs(pi2 - pi), "-g;myPi2;",
            [1:length(pi3)], abs(pi3 - pi), "-b;myPi3;");
+  xlabel("nTerms");
+  ylabel("error");
 endfunction
 
 function pi = myPi1 (nTerm)

@@ -111,7 +111,6 @@ endfunction
 
 \begin{itemize}
 \item why to use a single array for \verb=prevQ=?
-\item Complexity? max n?
 \item All solutions?
 \end{itemize}
 
@@ -138,6 +137,8 @@ function myPi (n)
   semilogy([1:length(pi1)], abs(pi1 - pi), "-r;myPi1;", 
            [1:length(pi2)], abs(pi2 - pi), "-g;myPi2;",
            [1:length(pi3)], abs(pi3 - pi), "-b;myPi3;");
+  xlabel("nTerms");
+  ylabel("error");
 endfunction
 
 function pi = myPi1 (nTerm)
@@ -182,6 +183,10 @@ endfunction
 \item since the requirement is to plot the series, extending the series at each step is more efficient.
 \item plotting in log make the convergence clearer.
 \end{itemize}
+
+\begin{center}
+\includegraphics[scale=0.7]{pichart}
+\end{center}
 
 \subsection*{Assignment 1c. Decimal to Ternary conversion}
 Modify the example function \verb=decInt2BinInt(x, nbits)= given in the lecture to  

@@ -11,7 +11,7 @@ function res=straddle(S,K)
   res=max(S-K,K-S);
 end 
 
-payoff=@(x)callPayoff(x,K);
+payoff=@(x)call(x,K);
 euroP=zeros(1,length(10:200));
 amerP=zeros(1,length(10:200));
 length(euroP)
@@ -37,13 +37,13 @@ plot([10:200],euroP,'g;EuroBinomialCRR;',
 xlabel('Number of time steps');
 ylabel('Price');
 
-f=@(x)callPayoff(x,85);
+f=@(x)call(x,85);
 europeanBinomialPricerD(spot, sigma, rf, T, 100, f, div_ts, div_rs)
 americanBinomialPricerD(spot, sigma, rf, T, 100, f, div_ts, div_rs)
-f=@(x)putPayoff(x,85);
+f=@(x)put(x,85);
 europeanBinomialPricerD(spot, sigma, rf, T, 100, f, div_ts, div_rs)
 americanBinomialPricerD(spot, sigma, rf, T, 100, f, div_ts, div_rs)
-f=@(x)straddlePayoff(x,85);
+f=@(x)straddle(x,85);
 europeanBinomialPricerD(spot, sigma, rf, T, 100, f, div_ts, div_rs)
 americanBinomialPricerD(spot, sigma, rf, T, 100, f, div_ts, div_rs)
 

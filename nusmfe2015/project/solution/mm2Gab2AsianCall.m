@@ -15,10 +15,13 @@ endfunction
 
 function e = expectation (sigmaL, sigmaS, rho, alpha, priceCurve, ti, tj, Ti, Tj)
   t = min(ti, tj);
-  a = sigmaL*sigmaL * (t - (exp(-alpha * Ti) + exp(-alpha * Tj))/alpha * (exp(alpha * t) -1) + exp(-alpha *(Ti+Tj))/2/alpha * (exp(2*alpha * t) -1) );
-  b = sigmaS*sigmaS * exp(- alpha*(Ti + Tj)) / 2 / alpha * (exp(2*alpha * t) -1);
-  c = rho * sigmaL * sigmaS * (exp(-alpha*Tj)/alpha * (exp(alpha * t) -1) - exp(-alpha*(Ti+Tj)) / alpha /2 * (exp(2*alpha * t) -1) );
-  d = rho * sigmaL * sigmaS * (exp(-alpha*Ti)/alpha * (exp(alpha * t) -1) - exp(-alpha*(Ti+Tj)) / alpha /2 * (exp(2*alpha * t) -1) );
+  at = (exp(alpha * t) -1) / alpha;
+  at2 = (exp(2*alpha * t) -1) / 2 / alpha;
+  aTij = exp(-alpha *(Ti+Tj));
+  a = sigmaL*sigmaL * (t - (exp(-alpha * Ti) + exp(-alpha * Tj)) * at + aTij * at2 );
+  b = sigmaS*sigmaS * aTij * at2;
+  c = rho * sigmaL * sigmaS * (exp(-alpha*Tj) * at - aTij * at2 );
+  d = rho * sigmaL * sigmaS * (exp(-alpha*Ti) * at - aTij * at2 );
   e = a + b + c + d;
   e *= priceCurve(Ti) * priceCurve(Tj);
 endfunction 
