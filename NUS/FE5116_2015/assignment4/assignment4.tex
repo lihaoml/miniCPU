@@ -4,6 +4,7 @@
 \lstset{
   mathescape
 }
+\usepackage{soul}
 \input{styleAndCommands}
 
 \newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}
@@ -94,7 +95,7 @@ S_b(0) F e^{-r_bT}\left( S_a(0) N(d_+) - K N(d_-)  \right).
 \end{align}
 where
 \begin{align*}
-d_{\pm} = \frac{\ln \frac{S_a(0)}{K} + (r_d - r_a - \rho \sigma_a \sigma_b \pm \frac{1}{2}\sigma_a^2)T}{\sigma_a \sqrt{T}}
+d_{\pm} = \frac{\ln \frac{S_a(0)}{K} + (r_d - r_a \textbf{\textcolor{red}{+}} \rho \sigma_a \sigma_b \pm \frac{1}{2}\sigma_a^2)T}{\sigma_a \sqrt{T}}
 \end{align*}
 
 \subsection*{Excercise 4.3}
@@ -135,7 +136,7 @@ You should describe how to set up the initial value at the terminal time step $t
 callOnFuturesPDE(priceCurve, alpha, sigma, rf, expiry, T, K, nT, nZ, Zmax, Zmin)
 \end{verbatim}
 where the nT and nZ are the number of subdivisions that divides the time axis and state variable axis in equal spaces.
-e\verb=Zmax= and \verb=Zmin= are the range of the state variable axis. \verb=riceCurve, alpha, sigma= are defined in the same way as Exercise 4.1.
+\verb=Zmax= and \verb=Zmin= are the range of the state variable axis. \verb=riceCurve, alpha, sigma= are defined in the same way as Exercise 4.1.
 
 \subsection*{Excercise 4.4}
 Let us consider an ODE derived from the Heston model for the characteristic function \cite{heston93} of the log price:
@@ -167,8 +168,8 @@ Le $D = D_R + iD_I$, by equating both the real and the imaginary part,
 our numerical ODE solver actually needs to solve a system of two ODEs:
 \begin{align}
 \begin{cases}
-& \pder{D_R}{\tau} = \frac{1}{2}\sigma_v^2 (D_R^2 - D_I^2) - \kappa D_r  - \rho \sigma_v b D_r - \rho \sigma_v a D_I  + \frac{1}{2}(a^2 - b^2 - b) \\
-& \pder{D_I}{\tau} = \sigma_v D_R D_I - \kappa D_I + \rho \sigma_v a D_r - \rho \sigma_v b D_I + 2ab + a \\ 
+& \pder{D_R}{\tau} = \frac{1}{2}\sigma_v^2 (D_R^2 - D_I^2) - \kappa D_r  - \rho \sigma_v b D_r - \rho \sigma_v a D_I  \textbf{\textcolor{red}{$-$}} \frac{1}{2}(a^2 - b^2 - b) \\
+& \pder{D_I}{\tau} = \textbf{\textcolor{red}{$\sigma_v^2$}} D_R D_I - \kappa D_I + \rho \sigma_v a D_r - \rho \sigma_v b D_I \textbf{\textcolor{red}{$-\frac12$}} (2ab + a) \\ 
 & D(0, u) = 0
 \end{cases}
 \end{align}
@@ -183,13 +184,13 @@ so a solver (e.g., \verb=fsolve()=, \url{https://www.gnu.org/software/octave/doc
 
 You should implement two functions
 \begin{verbatim}
-charHestonODE(sigmaV, kappa, theta, rho, u, tau, nT)
-charHestonAnalytic(sigmaV, kappa, theta, rho, u, tau)
+charHestonODE(sigmaV, kappa, rho, u, tau, nT)
+charHestonAnalytic(sigmaV, kappa, rho, u, tau)
 \end{verbatim}
 that solve for $D(\tau, u)$. 
 Then compare the two solutions. For each $\tau \in [0.1, 0.5, 1, 2]$, and
 \begin{align*}
-~\theta = 1, ~\kappa = 0.2, ~\sigma_v = 2.0, ~\rho = -0.3
+\textbf{\textcolor{red}{\st{$~\theta = 1, $}}} ~~\kappa = 0.2, ~\sigma_v = 2.0, ~\rho = -0.3
 \end{align*}
 plot the function $D$ of $a = [0, 0.1, 0.2, ..., 20.0]$ and $b = -2$ (recall that $u = a+ib$). 
 Each plot should overlay the PDE result with the closed form solution.
