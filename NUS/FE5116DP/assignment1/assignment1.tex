@@ -1,0 +1,157 @@
+
+\documentclass[11pt,a4paper,hidelinks,fleqn]{article}            % Article 12pt font for a4 paper while hiding links
+\usepackage[margin=1in]{geometry}                          % Required to adjust margins
+\input{styleAndCommands}
+\title{\vspace{-5ex}FE5116DP Assignment 1\vspace{-7ex}}
+\date{}
+\begin{document}
+\maketitle
+\subsection*{Assignment 1.1}
+Given an integer $n$ in decimal notation with no leading zeroes $(10 < n < 10^10)$,
+and denote $m$ the number of digits,
+perform the following operation exactly $k$ times: \vspace{-0.5cm}
+\begin{itemize}
+\item Choose two different positions $i$ and $j$ such that $1 \leq i < j \leq m$. 
+\item Swap the digits at positions i and j. 
+\end{itemize}
+\vspace{-0.5cm}
+The $k$ operations should be chosen such that the resulting number is the maximal possible number you can get at the end of this procedure. 
+
+Design and implement a function in Octave to solve the above problem:
+\begin{verbatim}
+function result = swapMax(n, k)
+\end{verbatim}
+You might consider using recursion. 
+
+\emph{Examples} \vspace{-0.9cm}
+\begin{verbatim}
+swapMax(456, 1) = 654
+swapMax(9754, 1) = 9745
+swapMax(435528, 2) = 855324
+swapMax(3648935, 1) = 9648335
+swapMax(3648935, 2) = 9846335
+\end{verbatim}
+
+\subsection*{Assignment 1.2}
+Implement two functions for approximating $e^x$:
+\begin{itemize}
+\item myExp1($x$, $n$): $\displaystyle e^x = \lim_{n\rightarrow\infty}\left(1+\frac x n \right)^n$
+\item myExp2($x$, $n$): $\displaystyle e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \ldots$
+\end{itemize}
+Plot convergence charts for $x=1$ and $x=2$.
+The X-axis of the chart is the number of terms used, i.e.\ $n$.
+The Y-axis of the chart is the error versus the Octave built-in \verb=exp= function.
+The Y-axis should be plot in log-scale.
+For each $x$, the convergence charts of the two functions should be plotted together for the ease of comparison.
+
+\subsection*{Assignment 1.3}
+
+\paragraph{a)} Implied volatility is the volatility $\sigma$,
+when plugged into the Black-Scholes option price formula, 
+generates the option price $V$ quoted in the market.
+The Black-Scholes analytic formula for a call option on the underlying $S$ struck at $K$ is
+\begin{align}
+V(S, r, K, \sigma, T) = S N(d_+) - K e^{-rT} N(d_-)
+\label{lab:bs-call}
+\end{align}
+where $r$ is the risk-free interest rate,
+$N(\cdot)$ is the standard cumulative normal function and is implemented as \verb=normcdf= in Octave, and
+\begin{align*}
+d_{\pm} = \frac{ln\frac{S}{K} + (r \pm \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}.
+\end{align*}
+Implement a function 
+\begin{verbatim}
+  ImpliedVol(S, r, K, T, V)
+\end{verbatim}
+that calculates the volatility $\sigma$ from all other given parameters.
+Note that \eqref{lab:bs-call} is an implicit function of $\sigma$ so a root search is needed to implied $\sigma$.
+
+Calculate the implied volatility for the below inputs: \vspace{-0.5cm}
+\begin{verbatim}
+  S = 100, r = 0.02, T = 1, K = 102, V = 8
+\end{verbatim}
+
+\paragraph{b)} The Black-Scholes assumption does not hold in real market 
+--- the volatility is not constant.
+The implied volatility for European options expired at time $T$ 
+is a function $\sigma(K)$ of the option strike $K$.
+This is called the volatility smile.
+
+Normally the market does not quote the whole volatility smile.
+It only quotes a discrete set of instruments.
+So the construction of the volatility smile is left to each individual financial institute 
+with a choice of interpolation scheme, such that option of all strikes can be evaluated.
+
+Let us consider a simplified situation. 
+Assuming you have 5 market quotes $[(K_i, \sigma_i)]$ for $i\in\{1, 2, 3, 4, 5\}$,
+construct a function 
+\vspace{-0.6cm}
+\begin{verbatim}
+  VolSmile( ks, vs, strike )
+    ks: the 5 strike quotes, in ascending order
+    vs: the 5 implied volatility quotes corresponding to ks
+    strike: the strike you want to query
+\end{verbatim}
+\vspace{-0.6cm}
+using cubic spline interpolator provided by Octave (
+\url{https://www.gnu.org/software/octave/doc/interpreter/One_002ddimensional-Interpolation.html})
+for the strikes within the range of $[K_1, K_5]$. For the ranges outside, we extrapolate using $\sigma_1$ for the left wing and $\sigma_5$ for the right wing (flat wings).
+The function returns a $\sigma$ for any positive input \verb=strike=.
+
+Construct the volatility smile for the below inputs:
+\begin{verbatim}
+  ks = [78, 92, 102, 115, 130]
+  vs = [0.30, 0.25, 0.20, 0.23, 0.28]
+\end{verbatim}
+and plot the smile for strike from [1,2,3,...,200].
+
+\paragraph{c)}
+With the whole volatility smile constructed from step b, we can 
+calculate the prices of European call option using Black-Scholes formula \eqref{lab:bs-call} for any strike.
+For strike from [1, 2,...,200] and
+\verb_S = 100, r = 0.02, T = 1_,
+plot the chart of option prices with respect to strike.
+
+\paragraph{d)}
+Step c gives us the function $C(K)$ from strike $K$ to price of European call option.
+The second derivative of the function $C(K)$ with respect to $K$ is in fact linked to
+the probability density function $p(.)$ of the spot price at expiry under risk-neutral measure.
+That is:
+\begin{align*}
+\frac{\partial^2 C(K)}{\partial K^2} = e^{-rT} p(K).
+\end{align*}
+
+For the same set of inputs, use numerical derivative to calculate $p(K)$ for $K$ from [1, 2,...,200], and plot it.
+
+\paragraph{e)}
+
+The present value of a European call option with strike at $K$ and expiry at $T$ can be expressed as expectation under risk-neutral measure $\probQ$
+\begin{align*}
+V(S, K, T) & = e^{-rT}\E_\probQ [(S_T - K)_+]
+\end{align*}
+and is the integral
+\begin{align}
+\label{eqn:bssolution}
+  V(S_0, K, T) = e^{-rT}\int_K^{+\infty} \left(S_T - K\right) p(S_T) dS_T 
+\end{align}
+Step d gives us a way to estimate the probability density function $p(.)$,
+so we can use quadrature to integrate \eqref{eqn:bssolution}. 
+
+Calculate call option prices using mid-point rule quadrature with 1000 intervals for strike from [1, 2, ..., 200],
+and plot the difference of the prices from the result of step c.
+
+\subsection*{Submission Checklist}
+Below is the list of required files in the submission:
+\begin{itemize}
+\item \verb=doc.pdf= that documents the algorithms, implementations, the required answers and charts. Only PDF format is acceptable, please do not submit any MS Word file.
+\item \verb=swapMax.m=  that contains the implementation of the required function for assignment 1.1.
+\item \verb=ex2.m= that contains the functions required by assignment 1.2, and the test script that generates the charts and necessary information.
+\item \verb=ex3.m= that contains the functions required by assignment 1.3, and the test script that generates the charts and necessary information.
+\end{itemize}
+Readability and performance of the code might be taken into account at grading.
+
+You do not need to create sub-folders for the questions. 
+The filename of the zip file should be in the format of \verb=Ex1_name1_matricNumber1_name2_matricNumber2.zip=.
+And the matric number should contain the last alphabetic letter.
+
+\end{document}
