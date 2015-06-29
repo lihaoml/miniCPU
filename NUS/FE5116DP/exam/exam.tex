@@ -7,10 +7,10 @@
 
 \subsection*{Question 1 [20 marks]}
 
-\paragraph{a)} For the function $f(x) = x^4 - 20 x^2 + 1, ~x\in[0, 10]$,
-describe an algorithm for finding the root of $f'(x) = 0$ using the secant method.
+\paragraph{a)} For the function $f(x) = 4x^3 + 4 x - 5, ~x\in[0, 10]$,
+describe an algorithm in pseudo code for finding the root of $f(x) = 0$ using the Regula Falsi method.
 
-\paragraph{b)} Calculate the first two iterations of the secant method used in a).
+\paragraph{b)} Calculate the first two iterations of the Regula Falsi method used in a).
 
 \subsection*{Question 2 [20 marks]} 
 
@@ -18,11 +18,12 @@ The function $f(x)$ is four times continuously differentiable ($C^4$).
 Given 5 sample points of the function $[f(x_0-h), f(x_0-\frac{h}{2}), f(x_0), f(x_0+\frac{h}{2}), f(x_0+h)]$,
 describe the algorithm to approximate $f'(x_0)$ through:
 
-\paragraph{a)} Taylor expansion at the four points $f(x_0-h), f(x_0-\frac{h}{2}), f(x_0+\frac{h}{2}), f(x_0+h)$;
+\paragraph{a)} combining the taylor expansions at the four points $f(x_0-h), f(x_0-\frac{h}{2}), f(x_0+\frac{h}{2}), f(x_0+h)$
+with the goal to achieve the highest possible order of accuracy;
 
-\paragraph{b)} Richardson extrapolation with the central difference g(h) and the step sizes $h$ and $\displaystyle \frac{h}{2}$; 
+\paragraph{b)} Richardson extrapolation with $g(h)$ and $g(\frac h2)$, where $g(h)$ is the central difference at $x_0$ with step size $h$; 
 
-\paragraph{c)} constructing the polynomial of order 4, $p(x) = \sum_{i=0}^4 a_i x^i$, passing the 5 given points and taking the derivative of the polynomial at $x_0$.
+\paragraph{c)} constructing the polynomial of order 4, $p(x) = \sum_{i=0}^4 a_i x^i$, passing by the 5 given points and taking the derivative of the polynomial at $x_0$.
 
 
 
@@ -32,9 +33,9 @@ Consider the following one step binomial tree model of the stock price process:
 \includegraphics[scale=0.9]{./4}
 \end{figure*}
 
-a) Assume interest rate is $0\%$, compute the price of a call option struck at 100 at maturity 1 year?
+a) Assume interest rate is $0\%$, compute the price of a call option struck at 100 at maturity 1 year using the method of the replicating portfolio.
 
-b) Assume interest rate is $5\%$, compute the price of a call option struck at 100 at maturity 1 year?
+b) Assume interest rate is $5\%$, compute the price of a call option struck at 100 at maturity 1 year using the method of the replicating portfolio.
 
 
 \subsection*{Question 4 [20 marks]} 
