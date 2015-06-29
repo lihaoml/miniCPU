@@ -40,32 +40,36 @@ b) Assume interest rate is $5\%$, compute the price of a call option struck at 1
 \subsection*{Question 4 [20 marks]} 
 Consider the numerical integration of 
 \begin{align*}
-\int_0^{10} \frac{1}{2} e^{-\frac12x^2} dx
+\int_0^{2} f(x) dx, ~~\text{where~} f(x) = \frac{1}{2} e^{-\frac12x^2}
 \end{align*}
 
 \paragraph{a)} Evaluate the integral by mid-point quadrature with 4 equally spaced intervals. 
 
 \paragraph{b)} Describe in pseudo code the algorithm to evaluate the integral using Monte-Carlo simulation.
  
-\paragraph{c)} What change do you need to make in the Monte-Carlo integration in b)
-if you would like to use the first 2 terms of the Taylor series
-expansion of $e^{-\frac12 x^2}$ as control variate?
+
+\paragraph{c)} You would like to use $g(x)$, the second order Taylor 
+expansion of $f(x)$ at $x=0$, as control variate. 
+Assume you know already the variance of $g(x)$ and covariance of $[f, g]$.
+Write down the expression of $g(x)$, 
+and explain what change you need to make in the Monte-Carlo integration algorithm in b) to use $g(x)$ as control variate.
 
 
 \subsection*{Question 5 [20 marks]}
-Consider the process of a underlying asset's price $X_t$
+Consider the process $X_t$
 \begin{align*}
 dX_t = \sigma dW_t
 \end{align*}
 where $W_t$ is a standard Wiener process and $\sigma$ is the constant volatility.
-Denote $V_t$ the price of a derivative on the asset. 
+Denote $V_t$ the price of a derivative on the process.
 
-a) Derive the partial differential equation satisfied by $V(x, t)$.
+\paragraph{a)} Derive the partial differential equation satisfied by $V(x, t)$.
 
-b) Discretize the partial differential equation using explicit Euler scheme in time axis and central different in price axis,
+\paragraph{b)} Assume the risk-free interest rate is 0,
+discretize the partial differential equation using finite difference in both time and x axis with explicit Euler scheme,
 write down the equation that computes $V(x, t_i)$ from the time slice $t_{i+1}$.
 
-c) Suppose that the derivative's price at $t_{i+1}$ is of the form shown in the below chart,
+\paragraph{c)} Suppose that the derivative's price at $t_{i+1}$ is of the form shown in the below chart,
 i.e., $V(x, t_{i+1})$ is known, 
 sketch the rough shape of $V(x, t_{i})$ on top of the plot and explain the rationale.
 \begin{figure*}[h]
