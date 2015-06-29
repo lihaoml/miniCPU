@@ -120,36 +120,98 @@ Solution: risk neutral probability: 75\%, 25\%. option price $= 10 \times 0.75 +
 \subsection*{Question 4 [20 marks]} 
 Consider the numerical integration of 
 \begin{align*}
-\int_0^{10} \frac{1}{2} e^{-\frac12x^2} dx
+\int_0^{2} f(x) dx, ~~\text{where~} f(x) = \frac{1}{2} e^{-\frac12x^2}
 \end{align*}
 
 \paragraph{a)} Evaluate the integral by mid-point quadrature with 4 equally spaced intervals. 
 
-\paragraph{b)} Describe in pseudo code the algorithm to evaluate the integral using Monte-Carlo simulation.
- 
-\paragraph{c)} What change do you need to make in the Monte-Carlo integration in b)
-if you would like to use the first 2 terms of the Taylor series
-expansion of $e^{-\frac12 x^2}$ as control variate?
+Solution:
+Intervals are (0, 2.5), (2.5, 5), (5, 7.5), (7.5, 10)
+\begin{align*}
+f(0.25) & = 0.48462, 
+~f(0.75) = 0.37742, 
+~f(1.25) = 0.22892, 
+~f(0.875) = 0.10813  \\
+ans = & 2.5 [f(1.25) + f(3.75) + f(6.25) + f(8.75)] = 0.11468
+\end{align*}
 
+
+\paragraph{b)} Describe in pseudo code the algorithm to evaluate the integral using Monte-Carlo simulation.
+
+Solution:
+
+For i = 1: N
+\begin{enumerate}
+\item[]{1.} Draw random number x' from uniform distribution [0, 1].
+\item[]{2.} $x=2x', ~~r_i = f(x)$,
+\end{enumerate}
+result is $\frac1N \sum(r_i)$
+ 
+\paragraph{c)} You would like to use $g(x)$, the second order Taylor 
+expansion of $f(x)$ at $x=0$, as control variate. 
+Assume you know already the variance of $g(x)$ and covariance of $[f, g]$.
+Write down the expression of $g(x)$, 
+and explain what change you need to make in the Monte-Carlo integration algorithm in b) to reduce the Monte-Carlo noise.
+
+Solution:
+\begin{align*}
+f'(x) = -\frac12 x e^{-\frac12 x^2}, ~~f''(x) = -\frac12 (e^{-\frac12 x^2} - x^2 e^{-\frac12 x^2})
+\end{align*}
+Taylor expansion at $x=0$ is 
+\begin{align*}
+g(x) = f(0) + f'(0) x + \frac12 f''(0) x^2 = \frac12 - \frac14 x^2 \\
+E[g(x)] = \int_0^2 g(x) dx = 1 - 2/3 = 0.333
+\end{align*}
+
+Instead of $r_i = f(x)$ in step 2 of b), 
+we use $r_i = f(x) - \lambda(g(x) - 0.333)$, where $\lambda = \frac{covar(f, g)}{var(g)}$.
 
 \subsection*{Question 5 [20 marks]}
-Consider the process of a underlying asset's price $X_t$
+Consider the process $X_t$
 \begin{align*}
 dX_t = \sigma dW_t
 \end{align*}
-where $W_t$ is a standard Wiener process and $\sigma$ is the constant volatility.
-Denote $V_t$ the price of a derivative on the asset. 
+where $W_t$ is a standard Wiener process and 
+$\sigma$ is the constant volatility.
+Denote $V_t$ the price of a derivative on $X_t$.
 
-a) Derive the partial differential equation satisfied by $V(x, t)$.
+\paragraph{a)} Derive the partial differential equation satisfied by $V(x, t)$.
 
-b) Discretize the partial differential equation using explicit Euler scheme in time axis and central different in price axis,
+Solution:
+
+Assuming the interest rate is constant $r$,
+the price of the discounted derivative contract $V(t, Z(t))$ follows the SDE:
+\begin{align}
+d\left(\frac{V}{B}\right) & = \frac{1}{B}\left(\frac{\partial V}{\partial t} dt + \frac{\partial V}{\partial X} dX + \frac{1}{2}\frac{\partial^2 V}{\partial X^2} dX^2 \right) - r\frac{V}{B}dt  \\
+   & = \frac{1}{B} \left[\left(\frac{\partial V}{\partial t} + \frac{1}{2} \sigma^2 \frac{\partial^2 X}{\partial X^2} - rV\right)dt + \sigma \frac{\partial V}{\partial X} dW_t \right]
+\end{align}
+For $\frac{V}{B}$ to be a martingale, 
+the derivative contract price $V(t, Z(t))$ has to satisfy the PDE:
+\begin{align}
+rV(t) = \frac{\partial V(t)}{\partial t} + \frac{1}{2} \sigma^2 \frac{\partial^2 V(t)}{\partial Z^2}
+\end{align}
+
+
+\paragraph{b)} Assume the risk-free interest rate is 0,
+discretize the partial differential equation using finite difference in both time and x axis with explicit Euler scheme,
 write down the equation that computes $V(x, t_i)$ from the time slice $t_{i+1}$.
 
+Solution: temporal time step h, spatial time step b,
+\begin{align}
+V(x, t_{i}) = V(x, t_{i+1}) +  \frac{1}{2} \sigma^2 h \frac{V(x-b, t_{i+1}) + V(x+b, t_{i+1}) - 2 V(x, t_{i+1})}{b^2}
+\end{align}
+
+
 c) Suppose that the derivative's price at $t_{i+1}$ is of the form shown in the below chart,
-i.e., $V(x, t_{i+1})$ is known, 
+i.e., $V(x, t_{i+1})$ is known, based on the result of b),
 sketch the rough shape of $V(x, t_{i})$ on top of the plot and explain the rationale.
+
+Solution:
+
+At $t_i$, the curve is higher than $V(t_{i+1})$ when the second derivative is positive, and lower when second derivative is negative.
+
 \begin{figure*}[h]
-\includegraphics[scale=0.9]{./6c} \\
+\includegraphics[scale=0.9]{./6s} \\
 \vspace{1cm}
 \textbf{*END OF PAPER*}
 \end{figure*}

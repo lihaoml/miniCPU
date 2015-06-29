@@ -7,7 +7,7 @@
 \begin{document}
 \maketitle
 \subsection*{Assignment 1.1}
-Given an integer $n$ in decimal notation with no leading zeroes $(10 < n < 10^10)$,
+Given an integer $n$ in decimal notation with no leading zeroes $(10 < n < 10^{10})$,
 and denote $m$ the number of digits,
 perform the following operation exactly $k$ times: \vspace{-0.5cm}
 \begin{itemize}
@@ -21,7 +21,6 @@ Design and implement a function in Octave to solve the above problem:
 \begin{verbatim}
 function result = swapMax(n, k)
 \end{verbatim}
-You might consider using recursion. 
 
 \emph{Examples} \vspace{-0.9cm}
 \begin{verbatim}
@@ -31,6 +30,20 @@ swapMax(435528, 2) = 855324
 swapMax(3648935, 1) = 9648335
 swapMax(3648935, 2) = 9846335
 \end{verbatim}
+
+\emph{Hint}
+
+You might consider using recursion (it's not compulsory though):  \vspace{-0.9cm}
+\begin{verbatim}
+swapMax(n, k) = swapMax(swapMax(n, k-1), 1)
+\end{verbatim}
+The strategy of swapMax(n, 1) is simple: starting from the left most digit, 
+the i-th position should be placed the i-th largest digit, 
+if it is not the case, you should swap i and j where j is the position of the i-th largest digit.
+
+Note that you have to perform k operations even if the maximum number is achieved before k operations.
+In that case, the swap that is the least harmful should be used.
+
 
 \subsection*{Assignment 1.2}
 Implement two functions for approximating $e^x$:
