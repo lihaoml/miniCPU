@@ -33,9 +33,9 @@ Consider the following one step binomial tree model of the stock price process:
 \includegraphics[scale=0.9]{./4}
 \end{figure*}
 
-a) Assume interest rate is $0\%$, compute the price of a call option struck at 100 at maturity 1 year using the method of the replicating portfolio.
+a) Assume interest rate is $0\%$, compute the price of a call option struck at 100 at maturity 1 year using the method of replicating portfolio.
 
-b) Assume interest rate is $5\%$, compute the price of a call option struck at 100 at maturity 1 year using the method of the replicating portfolio.
+b) Assume interest rate is $5\%$, compute the price of a call option struck at 100 at maturity 1 year using the method of replicating portfolio.
 
 
 \subsection*{Question 4 [20 marks]} 
@@ -47,30 +47,32 @@ Consider the numerical integration of
 \paragraph{a)} Evaluate the integral by mid-point quadrature with 4 equally spaced intervals. 
 
 \paragraph{b)} Describe in pseudo code the algorithm to evaluate the integral using Monte-Carlo simulation.
- 
 
-\paragraph{c)} You would like to use $g(x)$, the second order Taylor 
-expansion of $f(x)$ at $x=0$, as control variate. 
-Assume you know already the variance of $g(x)$ and covariance of $[f, g]$.
-Write down the expression of $g(x)$, 
-and explain what change you need to make in the Monte-Carlo integration algorithm in b) to use $g(x)$ as control variate.
+\paragraph{c)} Define $g(x)$ as the second order Taylor 
+expansion of $f(x)$ at $x=0$, write down the expression of $g(x)$ and compute the $E[g(x)] = \int_0^2 g(x) dx$ analytically.
+
+\paragraph{d)} You would like to use $g(x)$ as control variate to reduce the noise of the Monte-Carlo integration. 
+Describe in pseudo code this procedure.
+
+(\emph{Hint: To do this, you need to collect $g(x_i)$ and $f(x_i)$ for each sampled point $x_i$.
+With the vectors of $g(x_i)$ and $f(x_i)$, you can 1) estimate the variance of $g(x)$ and covariance of $[f, g]$ to choose the optimal coefficient $\lambda$ for the control variate technique and 2) carry out the Monte-Carlo simulation.})
+
 
 
 \subsection*{Question 5 [20 marks]}
-Consider the process $X_t$
+Consider the process $X_t$ under risk neutral measure
 \begin{align*}
 dX_t = \sigma dW_t
 \end{align*}
 where $W_t$ is a standard Wiener process and $\sigma$ is the constant volatility.
-Denote $V_t$ the price of a derivative on the process.
+Denote $V_t$ the price of a derivative on the process. The risk-free interest rate $r$ is constant and the zero coupon bond process is $\displaystyle \frac{dB_t}{B_t} = r dt$.
 
-\paragraph{a)} Derive the partial differential equation satisfied by $V(x, t)$.
+\paragraph{a)} Derive the partial differential equation satisfied by $V(x, t)$ using the fact that $\displaystyle \frac{V_t}{B_t}$ is a martingale under risk neutral measure.
 
-\paragraph{b)} Assume the risk-free interest rate is 0,
-discretize the partial differential equation using finite difference in both time and x axis with explicit Euler scheme,
+\paragraph{b)} Discretize the partial differential equation using central difference in x dimension and forward difference with explicit Euler scheme in time dimension,
 write down the equation that computes $V(x, t_i)$ from the time slice $t_{i+1}$.
 
-\paragraph{c)} Suppose that the derivative's price at $t_{i+1}$ is of the form shown in the below chart,
+\paragraph{c)} Assume the risk-free interest rate is 0. Suppose that the derivative's price at $t_{i+1}$ is of the form shown in the below chart,
 i.e., $V(x, t_{i+1})$ is known, 
 sketch the rough shape of $V(x, t_{i})$ on top of the plot and explain the rationale.
 \begin{figure*}[h]
