@@ -6,4 +6,6 @@
 *.gz
 *.bbl
 *.blg
+*.zip
+submission/
 *.bak
